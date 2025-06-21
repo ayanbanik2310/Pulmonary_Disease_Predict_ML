@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pulmonary Disease Detection</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Blurry background using ::before */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('{{ url_for('static', filename='pulmonary_system.jpg') }}') no-repeat center center/cover;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        .overlay {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .model-caption {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #0d6efd; /* Bootstrap primary color */
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 10px;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+        }
+        .main-heading {
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #dbeafe, #e0f2fe);
+            margin-top: 25px;
+            padding: 15px 30px;
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 0 12px rgba(13, 110, 253, 0.2);
+            animation: fadeInDown 1s ease;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="container overlay">
+        <div class="row w-100 align-items-center">
+            <h1 class="main-heading text-center text-primary mb-5">
+                Pulmonary Disease Detection
+            </h1>
+            <div class="col-md-6">
+                <div class="form-container">
+                    <h4 class="mb-3 text-primary">Predict with ML Model</h4>
+                    <form method="POST" action="/predict">
+                        {% for label, name in [
+                            ("Smoking", "input1"),
+                            ("Energy Level", "input2"),
+                            ("Immune Weakness", "input3"),
+                            ("Breathing Issue", "input4"),
+                            ("Throat Discomfort", "input5"),
+                            ("Family History", "input6"),
+                            ("Smoking Family History", "input7"),
+                            ("Stress Immune", "input8")
+                        ] %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ label }}</label>
+                                <input type="text" name="{{ name }}" class="form-control" required>
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary w-100">Predict</button>
+                    </form>
+                    {% if prediction_text %}
+                        <div class="alert alert-info mt-3">
+                            <strong>Result:</strong> {{ prediction_text }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 text-center d-flex flex-column justify-content-center">
+                <img src="{{ url_for('static', filename='pulmonary_system.jpg') }}" 
+                    alt="Lung Health" 
+                    class="img-fluid mb-3" 
+                    style="border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.3); max-height: 100%;">
+                
+                <p class="model-caption">Machine Learning Model</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
